@@ -21,13 +21,17 @@ Game.prototype.reset = function() {
   // this.framesCounter = 0;
   // this.obstacles = [];
   // this.score = 0;
-  this.boss = new Boss(this, 0, 0);
+  this.stage = new Stage(this);
+  this.cutout = new Cutout(this)
+  this.boss = new Boss(this, this.stage, this.cutout, 80, 80);
 };
 
 Game.prototype.drawAll = function() {
-  this.context.fillStyle='green';
+  this.context.fillStyle ='green';
   this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  this.stage.draw();
   this.boss.draw();
+  this.cutout.draw();
 }
 
 Game.prototype.clearAll = function() {

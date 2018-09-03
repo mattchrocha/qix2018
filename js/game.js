@@ -28,6 +28,7 @@ Game.prototype.reset = function() {
   // this.cutout2 = new Cutout(this, 600, 200, 200, 100);
   // this.cutouts = [ this.cutout1, this.cutout2 ];
   this.boss = new Boss(this, this.stage, 80, 80);
+  this.player = new Player(this, this.stage, 40, 40);
 };
 
 Game.prototype.drawAll = function() {
@@ -35,6 +36,7 @@ Game.prototype.drawAll = function() {
   this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
   this.stage.draw();
   this.boss.draw();
+  this.player.draw();
 };
 
 Game.prototype.clearAll = function() {

@@ -6,8 +6,6 @@ function Boss(game, stage, x, y) {
   this.x = x;
   this.y = y;
 
-  this.r = 5;
-
   this.vx = 10;
   this.vy = 4;
 

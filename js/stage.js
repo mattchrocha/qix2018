@@ -11,9 +11,11 @@ function Stage(game) {
   this.left = this.x;
   this.right = this.x + this.width;
 
-  this.cutout1 = new Cutout(this.game, 200, 300, 200, 300);
-  this.cutout2 = new Cutout(this.game, 600, 200, 200, 100);
-  this.cutouts = [ this.cutout1, this.cutout2 ];
+  this.cutout1 = new Cutout(this.game, 200, 300, 200, 280);
+  this.cutout2 = new Cutout(this.game, 600, 40, 200, 100);
+  this.cutout3 = new Cutout(this.game, 500, 200, 460, 100);
+  this.cutout4 = new Cutout(this.game, 40, 150, 200, 100);
+  this.cutouts = [ this.cutout1, this.cutout2, this.cutout3, this.cutout4 ];
 };
 
 Stage.prototype.draw = function () {

@@ -1,10 +1,10 @@
-function Cutout(game) {
+function Cutout(game, x, y, width, height) {
   this.game = game;
   
-  this.x = 400;
-  this.y = 200;
-  this.width = 350;
-  this.height = 250;
+  this.x = x;
+  this.y = y;
+  this.width = width;
+  this.height = height;
 
   this.top = this.y;
   this.bottom = this.y + this.height;

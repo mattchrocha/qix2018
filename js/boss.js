@@ -1,7 +1,7 @@
-function Boss(game, stage, cutout, x, y) {
+function Boss(game, stage, x, y) {
   this.game = game;
   this.stage = stage;
-  this.cutout = cutout;
+  this.cutouts = stage.cutouts;
 
   this.x = x;
   this.y = y;
@@ -32,6 +32,10 @@ Boss.prototype.draw = function() {
   this.game.context.fillRect(this.x, this.y, this.width, this.height);
 };
 
+
+
+
+
 Boss.prototype.move = function() {
   this.x += this.vx;
   this.y += this.vy;
@@ -42,34 +46,36 @@ Boss.prototype.move = function() {
     this.right + this.vx > this.stage.right ||
     this.left + this.vx < this.stage.left 
   ) {
-    console.log("bounce canvas X");
     this.vx *= -1;
   }
   if (
     this.bottom + this.vy > this.stage.bottom ||
     this.top + this.vy < this.stage.top
   ) {
-    console.log("bounce canvas Y");
     this.vy *= -1;
   }
 
-  // Bounce the cutouts
+  // Bounce with cutouts
+  for (var i = 0; i < this.cutouts.length; i++) {
+    checkCutoutsAndBounce(this, this.cutouts[i]);
+  };
+};
+
+function checkCutoutsAndBounce(self, cutout){
   if (
-    this.right + this.vx > this.cutout.left &&
-    this.bottom + this.vy > this.cutout.top &&
-    this.top + this.vy < this.cutout.bottom &&
-    this.left + this.vx < this.cutout.right
+    self.right + self.vx > cutout.left &&
+    self.bottom + self.vy > cutout.top &&
+    self.top + self.vy < cutout.bottom &&
+    self.left + self.vx < cutout.right
   ){
-    console.log("bounce cutout X");
-    this.vx *= -1;
+    self.vx *= -1;
   }
   if (
-    this.bottom + this.vy > this.cutout.top &&
-    this.right + this.vx > this.cutout.left &&
-    this.left + this.vx < this.cutout.right &&
-    this.top + this.vy < this.cutout.bottom
+    self.bottom + self.vy > cutout.top &&
+    self.right + self.vx > cutout.left &&
+    self.left + self.vx < cutout.right &&
+    self.top + self.vy < cutout.bottom
   ){
-    console.log("bounce cutout Y");
-    this.vy *= -1;
+    self.vy *= -1;
   }
 };

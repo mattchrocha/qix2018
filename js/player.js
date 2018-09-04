@@ -35,11 +35,18 @@ Player.prototype.setListeners = function() {
     for (var i = 0; i < this.cutouts.length; i++){
       if (isPlayerInCutout(this, this.cutouts[i])){
         this.moveOnCutoutBoundaries(event, this.cutouts[i]);
-        
-      }
-    }
-
-
+        for (var j = 0; j < this.cutouts.length; j++){
+          if (this.cutouts[j] !== this.cutouts[i]){
+            if (
+              isPlayerInCutout(this, this.cutouts[i]) === true &&
+              isPlayerInCutout(this, this.cutouts[i]) === isPlayerInCutout(this, this.cutouts[j])
+            ){
+              this.moveOnOverlapingCutouts(event, this.cutouts[i], this.cutouts[j]);
+            };
+          };
+        };  
+      };
+    };
   }.bind(this);
 };
 
@@ -51,6 +58,8 @@ function isPlayerInCutout(self, cutout){
     self.y - self.v < cutout.bottom 
   ){
     return true
+  } else {
+    return false
   }
 };
 
@@ -86,11 +95,6 @@ Player.prototype.canMoveY = function () {
   }
 };
 
-// Player.prototype.canMoveInsideCutoutX = function () {
-//   if (
-//     this
-//   )
-// }
 
 Player.prototype.moveOnStageBoundaries = function (event) {
   if (event.keyCode === UP_KEY) {
@@ -161,10 +165,8 @@ Player.prototype.moveOnCutoutBoundaries = function (event, cutout) {
     if (cutout.left == this.stage.left && this.x == cutout.left) {
       this.y = cutout.top;
     } else if (cutout.right == this.stage.right && this.x == cutout.right) {
-      console.log("entra en 2")
       this.y = cutout.top;
     } else {
-      console.log("entra en 3")
       if (this.x == cutout.left || this.x == cutout.right) {
         if (this.y + this.v > cutout.bottom){
           this.y = cutout.bottom;
@@ -191,39 +193,164 @@ Player.prototype.moveOnCutoutBoundaries = function (event, cutout) {
   };
 };
 
-// Player.prototype.setListeners = function() {
-//   document.onkeydown = function(event) {
-//     if (event.keyCode === UP_KEY) {
-//       // this.y -= this.v;
-//       this.acc = -0.5;
-//     } else if (event.keyCode === RIGHT_KEY) {
-//       // this.x += this.v;
-//       this.acc = +0.5;
-//     } else if (event.keyCode === DOWN_KEY){
-//       // this.y += this.v;
-//       this.acc = +0.5;
-//     } else if (event.keyCode === LEFT_KEY) {
-//       // this.x -= this.v;
-//       this.acc = -0.5;
-//     };
-//   }.bind(this);
+Player.prototype.moveOnOverlapingCutouts = function (event, cutout1, cutout2){
+  if (event.keyCode === UP_KEY) {
+    if (checkCutoutsLeftRightHigherBottom(this, cutout1, cutout2)){
+      this.y = cutout2.bottom;
+    } else if (checkCutoutsLeftRightLowerBottom(this, cutout1, cutout2)){
+      this.y = cutout1.bottom;
+    }
+  } else if (event.keyCode === RIGHT_KEY) {
+    if (checkCutoutsTopBottomHigherLeft(this, cutout1, cutout2)){
+      this.x = cutout1.left;
+    } else if (checkCutoutsTopBottomLowerLeft(this, cutout1, cutout2)){
+      this.x = cutout2.left;
+    }
+  } else if (event.keyCode === DOWN_KEY) {
+    if (checkCutoutsLeftRightHigherTop(this, cutout1, cutout2)){
+      this.y = cutout1.top;
+    } else if (checkCutoutsLeftRightLowerTop(this, cutout1, cutout2)){
+      this.y = cutout2.top;
+    }
+  } else if (event.keyCode === LEFT_KEY) {
+    if (checkCutoutsTopBottomHigherRight(this, cutout1, cutout2)){
+      this.x = cutout2.right;
+    } else if (checkCutoutsTopBottomLowerRight(this, cutout1, cutout2)){
+      this.x = cutout1.right;
+    }
+  }
+}
 
-//   document.onkeyup = function(event) {
-//     if (event.keyCode === UP_KEY) {
-//       // this.y -= this.v;
-//       this.acc = 0;
-//     } else if (event.keyCode === RIGHT_KEY) {
-//       // this.x += this.v;
-//       this.acc = 0;
-//     } else if (event.keyCode === DOWN_KEY){
-//       // this.y += this.v;
-//       this.acc = 0;
-//     } else if (event.keyCode === LEFT_KEY) {
-//       // this.x -= this.v;
-//       this.acc = 0;
-//     };
-//   }.bind(this);
-// };
+
+function checkCutoutsLeftRightHigherBottom(self, cutout1, cutout2) {
+  if (cutout1.bottom > cutout2.bottom) {
+    if (
+      cutout1.left == cutout2.right &&
+      self.x == cutout1.left
+    ){
+      return true;
+    } else if (
+      cutout1.right == cutout2.left &&
+      self.x == cutout1.right
+    ){
+      return true;
+    }
+  }
+} // self.y = cutout2.bottom
+
+function checkCutoutsLeftRightLowerBottom(self, cutout1, cutout2) {
+  if (cutout1.bottom < cutout2.bottom) {
+    if (
+      cutout1.left == cutout2.right &&
+      self.x == cutout1.left
+    ){
+      return true;
+    } else if (
+      cutout1.right == cutout2.left &&
+      self.x == cutout1.right
+    ){
+      return true;
+    }
+  }
+} // self.y = cutout1.bottom
+
+function checkCutoutsTopBottomHigherLeft(self, cutout1, cutout2){
+  if (cutout1.left > cutout2.left){
+    if (
+      cutout1.bottom == cutout2.top &&
+      self.y == cutout1.bottom
+    ){
+      return true;
+    } else if (
+      cutout1.top == cutout2.bottom &&
+      self.y == cutout1.top
+    ) {
+      return true;
+    }
+  }
+} // self.x = cutout2.left
+
+function checkCutoutsTopBottomLowerLeft(self, cutout1, cutout2){
+  if (cutout1.left < cutout2.left){
+    if (
+      cutout1.bottom == cutout2.top &&
+      self.y == cutout1.bottom
+    ){
+      return true;
+    } else if (
+      cutout1.top == cutout2.bottom &&
+      self.y == cutout1.top
+    ){
+      return true;
+    }
+  }
+} // self.x = cutout1.left;
+
+function checkCutoutsLeftRightHigherTop(self, cutout1, cutout2) {
+  if (cutout1.top > cutout2.top) {
+    if (
+      cutout1.left == cutout2.right &&
+      self.x == cutout1.left
+    ){
+      return true;
+    } else if (
+      cutout1.right == cutout2.left &&
+      self.x == cutout1.right
+    ){
+      return true;
+    }
+  }
+} // self.y = cutout1.top
+
+function checkCutoutsLeftRightLowerTop(self, cutout1, cutout2) {
+  if (cutout1.top < cutout2.top) {
+    if (
+      cutout1.left == cutout2.right &&
+      self.x == cutout1.left
+    ){
+      return true;
+    } else if (
+      cutout1.right == cutout2.left &&
+      self.x == cutout1.right
+    ){
+      return true;
+    }
+  }
+} // self.y = cutout2.top
+
+function checkCutoutsTopBottomHigherRight(self, cutout1, cutout2){
+  if (cutout1.right > cutout2.right){
+    if (
+      cutout1.bottom == cutout2.top &&
+      self.y == cutout1.bottom
+    ){
+      return true;
+    } else if (
+      cutout1.top == cutout2.bottom &&
+      self.y == cutout1.top
+    ) {
+      return true;
+    }
+  }
+} // self.x = cutout2.right
+
+function checkCutoutsTopBottomLowerRight(self, cutout1, cutout2){
+  if (cutout1.right < cutout2.right){
+    if (
+      cutout1.bottom == cutout2.top &&
+      self.y == cutout1.bottom
+    ){
+      return true;
+    } else if (
+      cutout1.top == cutout2.bottom &&
+      self.y == cutout1.top
+    ){
+      return true;
+    }
+  }
+} // self.x = cutout1.right;
+
+
 
 
 /*

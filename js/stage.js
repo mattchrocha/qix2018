@@ -15,7 +15,10 @@ function Stage(game) {
   this.cutout2 = new Cutout(this.game, 600, 40, 200, 100);
   this.cutout3 = new Cutout(this.game, 500, 200, 460, 100);
   this.cutout4 = new Cutout(this.game, 40, 150, 200, 100);
-  this.cutouts = [ this.cutout1, this.cutout2, this.cutout3, this.cutout4 ];
+  this.cutout5 = new Cutout(this.game, 650, 140, 80, 20);
+  this.cutout6 = new Cutout(this.game, 800, 40, 80, 20);
+  this.cutout7 = new Cutout(this.game, 250, 220, 230, 120);
+  this.cutouts = [ this.cutout1, this.cutout2, this.cutout3, this.cutout4 , this.cutout5, this.cutout6, this.cutout7];
 };
 
 Stage.prototype.draw = function () {

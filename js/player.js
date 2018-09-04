@@ -162,7 +162,7 @@ Player.prototype.moveOnCutoutBoundaries = function (event, cutout) {
       this.y = cutout.top;
     } else if (cutout.right == this.stage.right && this.x == cutout.right) {
       console.log("entra en 2")
-      this.x = cutout.top;
+      this.y = cutout.top;
     } else {
       console.log("entra en 3")
       if (this.x == cutout.left || this.x == cutout.right) {

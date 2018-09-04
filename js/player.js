@@ -10,9 +10,14 @@ function Player(game, stage, x, y){
 
   this.v = 40;
 
+  this.vx = 0;
+  this.vy = 0;
+  this.speed = 20;
+
   this.acc = 0;
 
-  this.name = "player!!"
+  this.createMode = false;
+
   this.setListeners();
 }
 
@@ -20,6 +25,7 @@ var UP_KEY = 38;
 var DOWN_KEY = 40;
 var LEFT_KEY = 37;
 var RIGHT_KEY = 39;
+var SPACE_BAR = 32;
 
 Player.prototype.draw = function () {
   this.game.context.beginPath();
@@ -31,24 +37,42 @@ Player.prototype.draw = function () {
 
 Player.prototype.setListeners = function() {
   document.onkeydown = function(event) {
-    this.moveOnStageBoundaries(event);
-    for (var i = 0; i < this.cutouts.length; i++){
-      if (isPlayerInCutout(this, this.cutouts[i])){
-        this.moveOnCutoutBoundaries(event, this.cutouts[i]);
-        for (var j = 0; j < this.cutouts.length; j++){
-          if (this.cutouts[j] !== this.cutouts[i]){
-            if (
-              isPlayerInCutout(this, this.cutouts[i]) === true &&
-              isPlayerInCutout(this, this.cutouts[i]) === isPlayerInCutout(this, this.cutouts[j])
-            ){
-              this.moveOnOverlapingCutouts(event, this.cutouts[i], this.cutouts[j]);
-            };
-          };
-        };  
-      };
-    };
+    if (event.keyCode === SPACE_BAR){
+      this.createMode = !this.createMode;
+      console.log("Create mode: "+ this.createMode)
+    } else if (!this.createMode){
+      this.moveInBoundaries(event);
+    } else if (this.createMode){
+      this.move(event);
+      // this.moveOutAndCreate(event);
+    }
+  }.bind(this);
+
+  document.onkeyup = function(event) {
+    this.clearVelocity(event);
   }.bind(this);
 };
+
+
+
+Player.prototype.moveInBoundaries = function(event){
+  this.moveOnStageBoundaries(event);
+  for (var i = 0; i < this.cutouts.length; i++){
+    if (isPlayerInCutout(this, this.cutouts[i])){
+      this.moveOnCutoutBoundaries(event, this.cutouts[i]);
+      for (var j = 0; j < this.cutouts.length; j++){
+        if (this.cutouts[j] !== this.cutouts[i]){
+          if (
+            isPlayerInCutout(this, this.cutouts[i]) === true &&
+            isPlayerInCutout(this, this.cutouts[i]) === isPlayerInCutout(this, this.cutouts[j])
+          ){
+            this.moveOnOverlapingCutouts(event, this.cutouts[i], this.cutouts[j]);
+          };
+        };
+      };  
+    };
+  };
+}
 
 function isPlayerInCutout(self, cutout){
   if (
@@ -350,54 +374,49 @@ function checkCutoutsTopBottomLowerRight(self, cutout1, cutout2){
   }
 } // self.x = cutout1.right;
 
+Player.prototype.moveOutAndCreate = function(event){
 
+}
 
-
-/*
-
-Car.prototype.handleKeyDown = function(key){
-  console.log(key);
-  switch(key){
-    case 38: // Up
-     this.acc = -0.5;
-     break;
-    case 40: // down
-     this.acc = 0.5;
-     break; 
-    case 37: // left
-     this.turnAngleSpeed(-1);
-     break; 
-    case 39: // right
-     this.turnAngleSpeed(1);
-     break; 
+Player.prototype.move = function (event) {
+  switch (event.keyCode) {
+    case UP_KEY: // Up
+      if (this.vy > -this.speed){
+        this.vy--
+      }
+      // this.y -= this.v;
+      break;
+    case DOWN_KEY: // down
+      if (this.vy < this.speed){
+        this.vy++
+      }
+      // this.y += this.v;
+      break;
+    case LEFT_KEY: // left
+      if (this.vx > -this.speed){
+        this.vx--
+      }
+      // this.x -= this.v;
+      break;
+    case RIGHT_KEY: // right
+      if (this.vx < this.speed){
+        this.vx++
+      }
+      // this.x += this.v;
+      break;
   }
+  this.y += this.vy;
+  this.x += this.vx;
 }
 
-Car.prototype.handleKeyUp = function(key){
-   switch(key){
-    case 38: // Up
-     this.acc = 0;
-     break;
-    case 40: // down
-     this.acc = 0;
-     break; 
-    case 37: // left
-     this.angularSpeed = 0;
-     break; 
-    case 39: // right
-     this.angularSpeed = 0;
-     break; 
+Player.prototype.clearVelocity = function(event){
+  switch (event.keyCode) {
+    case UP_KEY:
+    case DOWN_KEY:
+    case LEFT_KEY:
+    case RIGHT_KEY:
+      this.vx = 0;
+      this.vy = 0;
+      break;
   }
-}
-
-document.onkeydown = function(e){
-  car.handleKeyDown(e.keyCode);
-  car2.handleKeyDown(e.keyCode);
-}
-
-document.onkeyup = function(e){
-  car.handleKeyUp(e.keyCode);  
-  car2.handleKeyUp(e.keyCode);
-} */
-
-
+};

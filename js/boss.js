@@ -13,7 +13,7 @@ function Boss(game, stage, x, y) {
   this.height = 50;
 
   this.updateObjectLimits();
-  this.updateObjectCoord();
+  this.updateObjectBoundaries();
 }
 
 Boss.prototype.updateObjectLimits = function() {
@@ -23,7 +23,7 @@ Boss.prototype.updateObjectLimits = function() {
   this.right = this.x + this.width;
 };
 
-Boss.prototype.updateObjectCoord = function() {
+Boss.prototype.updateObjectBoundaries = function() {
   this.tl = [this.x, this.y];
   this.tr = [this.x + this.width, this.y];
   this.bl = [this.x, this.y + this.height];
@@ -32,6 +32,7 @@ Boss.prototype.updateObjectCoord = function() {
   this.rightNew = [this.tr, this.br];
   this.bottomNew = [this.bl, this.br];
   this.leftNew = [this.tl, this.bl];
+  this.boundaries = [this.topNew,this.rightNew,this.bottomNew,this.leftNew];
 };
 
 Boss.prototype.draw = function() {
@@ -43,7 +44,7 @@ Boss.prototype.move = function() {
   this.x += this.vx;
   this.y += this.vy;
   this.updateObjectLimits();
-  this.updateObjectCoord();
+  this.updateObjectBoundaries();
 
   // Bounce inside the whole stage
   if (
@@ -63,6 +64,7 @@ Boss.prototype.move = function() {
   for (var i = 0; i < this.cutouts.length; i++) {
     checkCutoutsAndBounce(this, this.cutouts[i]);
   }
+
 };
 
 function checkCutoutsAndBounce(self, cutout) {

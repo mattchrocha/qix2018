@@ -12,6 +12,7 @@ Game.prototype.start = function() {
       this.clearAll();
       this.drawAll();
       this.moveAll();
+      this.detectAll();
     }.bind(this),
     1000 / this.fps
   );
@@ -45,4 +46,12 @@ Game.prototype.clearAll = function() {
 
 Game.prototype.moveAll = function() {
   this.boss.move();
+};
+
+Game.prototype.detectAll = function(){
+  if (this.player.lifeCord){
+    if (elementsIntersect(this.boss,this.player.lifeCord)){
+      return alert("You crashed!")
+    };
+  };
 };

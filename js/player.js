@@ -21,7 +21,7 @@ function Player(game, stage, boss, x, y){
   this.newCutoutX = [];
   this.newCutoutY = [];
 
-  this.lifeCord = [];
+  this.lifeCord = null;
 
   this.setListeners();
 }
@@ -38,8 +38,8 @@ Player.prototype.draw = function () {
   this.game.context.arc(this.x, this.y, this.r, 0, Math.PI * 2);
   this.game.context.fill();
   this.game.context.closePath();
-  if (this.lifeCord.length > 0){
-    this.lifeCord[0].draw()
+  if (this.lifeCord){
+    this.lifeCord.draw()
   };
 };
 
@@ -456,8 +456,8 @@ Player.prototype.pushCutout = function (coordX, coordY){
 
 Player.prototype.createLifeCord = function (){
   if (this.createMode){
-    this.lifeCord.push(new LifeCord(this.game, this.stage, this.boss, this, this.x, this.y))
+    this.lifeCord = new LifeCord(this.game, this.stage, this.boss, this, this.x, this.y);
   } else if (!this.createMode){
-    this.lifeCord = [];
+    this.lifeCord = null;
   };
 }

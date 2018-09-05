@@ -14,7 +14,7 @@ Game.prototype.start = function() {
       this.detectAll();
       this.moveAll();
     }.bind(this),
-    1000 / 60
+    1000 / this.fps
   );
 };
 
@@ -58,9 +58,11 @@ Game.prototype.detectAll = function(){
 Game.prototype.collidesLifeCord = function(){
   if (this.player.lifeCord){
     if (elementsIntersect(this.boss,this.player.lifeCord)){
-      if (confirm("You crashed! New game?")){
-        return this.reset();
-      };
+      // if (confirm("You crashed! New game?")){
+      //   return this.reset();
+      // };
+      this.boss.vx = 0;
+      this.boss.vy = 0;
     };
   };
 };
@@ -68,18 +70,22 @@ Game.prototype.collidesLifeCord = function(){
 Game.prototype.collidesPlayer = function(){
   if (this.player.createMode){
     if (elementsIntersect(this.boss,this.player)){
-      if (confirm("You have been destroyed! New game?")){
-        return this.reset();
-      };
+      // if (confirm("You have been destroyed! New game?")){
+      //   return this.reset();
+      // };
+      this.boss.vx = 0;
+      this.boss.vy = 0;
     }
   }
 }
 
 Game.prototype.destroysBoss = function(){
   if (this.calculateAreaLeft() <= 20){
-    if (confirm("You won! New game?")){
-      return this.reset();
-    };
+    // if (confirm("You won! New game?")){
+    //   return this.reset();
+    // };
+    this.boss.vx = 0;
+    this.boss.vy = 0;
   }
 }
 
@@ -92,8 +98,3 @@ Game.prototype.calculateAreaLeft = function(){
   return 100 - (acc/this.stage.originalArea*100)
 }
 
-
-
-function calculateArea(element){
-  return ;
-}

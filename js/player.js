@@ -7,7 +7,7 @@ function Player(game, stage, boss, x, y){
   this.x = x;
   this.y = y;
 
-  this.r = 50;
+  this.r = 10;
 
   this.v = 40;
 
@@ -464,6 +464,7 @@ Player.prototype.pushCutout = function (coordX, coordY){
     coordX.sort(compare);
     coordY.sort(compare);
     this.stage.addCutout(coordX[0], coordY[0], coordX[1]-coordX[0], coordY[1]-coordY[0]);
+    console.log(this.stage.cutouts);
     console.log("Area left: " + this.game.calculateAreaLeft())
   }
 }

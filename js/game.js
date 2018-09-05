@@ -11,10 +11,10 @@ Game.prototype.start = function() {
     function() {
       this.clearAll();
       this.drawAll();
-      this.moveAll();
       this.detectAll();
+      this.moveAll();
     }.bind(this),
-    1000 / this.fps
+    1000 / 60
   );
 };
 
@@ -49,9 +49,51 @@ Game.prototype.moveAll = function() {
 };
 
 Game.prototype.detectAll = function(){
+  this.collidesLifeCord();
+  this.collidesPlayer();
+  this.destroysBoss();
+};
+
+
+Game.prototype.collidesLifeCord = function(){
   if (this.player.lifeCord){
     if (elementsIntersect(this.boss,this.player.lifeCord)){
-      return alert("You crashed!")
+      if (confirm("You crashed! New game?")){
+        return this.reset();
+      };
     };
   };
 };
+
+Game.prototype.collidesPlayer = function(){
+  if (this.player.createMode){
+    if (elementsIntersect(this.boss,this.player)){
+      if (confirm("You have been destroyed! New game?")){
+        return this.reset();
+      };
+    }
+  }
+}
+
+Game.prototype.destroysBoss = function(){
+  if (this.calculateAreaLeft() <= 20){
+    if (confirm("You won! New game?")){
+      return this.reset();
+    };
+  }
+}
+
+
+Game.prototype.calculateAreaLeft = function(){
+  var acc = 0;
+  this.stage.cutouts.forEach(function(element){
+    acc += (element.width * element.height);
+  });
+  return 100 - (acc/this.stage.originalArea*100)
+}
+
+
+
+function calculateArea(element){
+  return ;
+}

@@ -6,20 +6,37 @@ function Stage(game) {
   this.width = 920;
   this.height = 540;
 
+  this.originalArea = this.width * this.height;
+  this.currentArea = this.originalArea;
+
   this.top = this.y;
   this.bottom = this.y + this.height;
   this.left = this.x;
   this.right = this.x + this.width;
 
-  this.cutout1 = new Cutout(this.game, 200, 300, 200, 280);
-  this.cutout2 = new Cutout(this.game, 600, 40, 200, 100);
-  this.cutout3 = new Cutout(this.game, 500, 200, 460, 100);
-  this.cutout4 = new Cutout(this.game, 40, 150, 200, 100);
-  this.cutout5 = new Cutout(this.game, 650, 140, 80, 20);
-  this.cutout6 = new Cutout(this.game, 800, 40, 80, 20);
-  this.cutout7 = new Cutout(this.game, 250, 220, 230, 120);
+  // this.cutout1 = new Cutout(this.game, 200, 300, 200, 280);
+  // this.cutout2 = new Cutout(this.game, 600, 40, 200, 100);
+  // this.cutout3 = new Cutout(this.game, 500, 200, 460, 100);
+  // this.cutout4 = new Cutout(this.game, 40, 150, 200, 100);
+  // this.cutout5 = new Cutout(this.game, 650, 140, 80, 20);
+  // this.cutout6 = new Cutout(this.game, 800, 40, 80, 20);
+  // this.cutout7 = new Cutout(this.game, 250, 220, 230, 120);
   this.cutouts = []
   // this.cutouts = [this.cutout1, this.cutout2, this.cutout3, this.cutout4 , this.cutout5, this.cutout6, this.cutout7];
+  
+  this.updateObjectBoundaries();
+};
+
+Stage.prototype.updateObjectBoundaries = function() {
+  this.tl = [this.x, this.y];
+  this.tr = [this.x + this.width, this.y];
+  this.bl = [this.x, this.y + this.height];
+  this.br = [this.x + this.width, this.y + this.height];
+  this.topNew = [this.tl, this.tr];
+  this.rightNew = [this.tr, this.br];
+  this.bottomNew = [this.bl, this.br];
+  this.leftNew = [this.tl, this.bl];
+  this.boundaries = [this.topNew,this.rightNew,this.bottomNew,this.leftNew];
 };
 
 Stage.prototype.draw = function () {
@@ -33,3 +50,4 @@ Stage.prototype.draw = function () {
 Stage.prototype.addCutout = function (x, y, w, h){
   this.cutouts.push(new Cutout(this.game, x, y, w, h))
 };
+

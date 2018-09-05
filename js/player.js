@@ -7,7 +7,7 @@ function Player(game, stage, boss, x, y){
   this.x = x;
   this.y = y;
 
-  this.r = 10;
+  this.r = 50;
 
   this.v = 40;
 
@@ -32,6 +32,18 @@ var LEFT_KEY = 37;
 var RIGHT_KEY = 39;
 var SPACE_BAR = 32;
 
+Player.prototype.updateObjectBoundaries = function() {
+  this.tl = [this.x-this.r, this.y-this.r];
+  this.tr = [this.x+this.r, this.y-this.r];
+  this.bl = [this.x-this.r, this.y+this.r];
+  this.br = [this.x+this.r, this.y+this.r];
+  this.topNew = [this.tl, this.tr];
+  this.rightNew = [this.tr, this.br];
+  this.bottomNew = [this.bl, this.br];
+  this.leftNew = [this.tl, this.bl];
+  this.boundaries = [this.topNew,this.rightNew,this.bottomNew,this.leftNew];
+};
+
 Player.prototype.draw = function () {
   this.game.context.beginPath();
   this.game.context.fillStyle = "blue";
@@ -41,6 +53,7 @@ Player.prototype.draw = function () {
   if (this.lifeCord){
     this.lifeCord.draw()
   };
+  this.updateObjectBoundaries();
 };
 
 Player.prototype.setListeners = function() {
@@ -451,6 +464,7 @@ Player.prototype.pushCutout = function (coordX, coordY){
     coordX.sort(compare);
     coordY.sort(compare);
     this.stage.addCutout(coordX[0], coordY[0], coordX[1]-coordX[0], coordY[1]-coordY[0]);
+    console.log("Area left: " + this.game.calculateAreaLeft())
   }
 }
 

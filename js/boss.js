@@ -12,10 +12,8 @@ function Boss(game, stage, x, y) {
   this.width = 50;
   this.height = 50;
 
-  this.top = this.y;
-  this.bottom = this.y + this.height;
-  this.left = this.x;
-  this.right = this.x + this.width;
+  this.updateObjectLimits();
+  this.updateObjectCoord();
 }
 
 Boss.prototype.updateObjectLimits = function() {
@@ -25,24 +23,32 @@ Boss.prototype.updateObjectLimits = function() {
   this.right = this.x + this.width;
 };
 
+Boss.prototype.updateObjectCoord = function() {
+  this.tl = [this.x, this.y];
+  this.tr = [this.x + this.width, this.y];
+  this.bl = [this.x, this.y + this.height];
+  this.br = [this.x + this.width, this.y + this.height];
+  this.topNew = [this.tl, this.tr];
+  this.rightNew = [this.tr, this.br];
+  this.bottomNew = [this.bl, this.br];
+  this.leftNew = [this.tl, this.bl];
+};
+
 Boss.prototype.draw = function() {
   this.game.context.fillStyle = "red";
   this.game.context.fillRect(this.x, this.y, this.width, this.height);
 };
 
-
-
-
-
 Boss.prototype.move = function() {
   this.x += this.vx;
   this.y += this.vy;
   this.updateObjectLimits();
+  this.updateObjectCoord();
 
   // Bounce inside the whole stage
   if (
     this.right + this.vx > this.stage.right ||
-    this.left + this.vx < this.stage.left 
+    this.left + this.vx < this.stage.left
   ) {
     this.vx *= -1;
   }
@@ -56,16 +62,16 @@ Boss.prototype.move = function() {
   // Bounce with cutouts
   for (var i = 0; i < this.cutouts.length; i++) {
     checkCutoutsAndBounce(this, this.cutouts[i]);
-  };
+  }
 };
 
-function checkCutoutsAndBounce(self, cutout){
+function checkCutoutsAndBounce(self, cutout) {
   if (
     self.right + self.vx > cutout.left &&
     self.bottom + self.vy > cutout.top &&
     self.top + self.vy < cutout.bottom &&
     self.left + self.vx < cutout.right
-  ){
+  ) {
     self.vx *= -1;
   }
   if (
@@ -73,7 +79,7 @@ function checkCutoutsAndBounce(self, cutout){
     self.right + self.vx > cutout.left &&
     self.left + self.vx < cutout.right &&
     self.top + self.vy < cutout.bottom
-  ){
+  ) {
     self.vy *= -1;
   }
-};
+}

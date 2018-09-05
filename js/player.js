@@ -1,8 +1,9 @@
-function Player(game, stage, x, y){
+function Player(game, stage, boss, x, y){
   this.game = game;
   this.stage = stage;
   this.cutouts = stage.cutouts;
-  
+  this.boss = boss;
+
   this.x = x;
   this.y = y;
 
@@ -17,6 +18,10 @@ function Player(game, stage, x, y){
   this.acc = 0;
 
   this.createMode = false;
+  this.newCutoutX = [];
+  this.newCutoutY = [];
+
+  this.lifeCord = [];
 
   this.setListeners();
 }
@@ -33,14 +38,20 @@ Player.prototype.draw = function () {
   this.game.context.arc(this.x, this.y, this.r, 0, Math.PI * 2);
   this.game.context.fill();
   this.game.context.closePath();
+  if (this.lifeCord.length > 0){
+    this.lifeCord[0].draw()
+  };
 };
 
 Player.prototype.setListeners = function() {
   document.onkeydown = function(event) {
     if (event.keyCode === SPACE_BAR){
       this.createMode = !this.createMode;
+      this.createCutout();
+      this.createLifeCord();
       console.log("Create mode: "+ this.createMode)
-    } else if (!this.createMode){
+    }
+    if (!this.createMode){
       this.moveInBoundaries(event);
     } else if (this.createMode){
       this.move(event);
@@ -381,32 +392,32 @@ Player.prototype.moveOutAndCreate = function(event){
 Player.prototype.move = function (event) {
   switch (event.keyCode) {
     case UP_KEY: // Up
-      if (this.vy > -this.speed){
-        this.vy--
-      }
-      // this.y -= this.v;
+      // if (this.vy > -this.speed){
+      //   this.vy--
+      // }
+      this.y -= this.v;
       break;
     case DOWN_KEY: // down
-      if (this.vy < this.speed){
-        this.vy++
-      }
-      // this.y += this.v;
+      // if (this.vy < this.speed){
+      //   this.vy++
+      // }
+      this.y += this.v;
       break;
     case LEFT_KEY: // left
-      if (this.vx > -this.speed){
-        this.vx--
-      }
-      // this.x -= this.v;
+      // if (this.vx > -this.speed){
+      //   this.vx--
+      // }
+      this.x -= this.v;
       break;
     case RIGHT_KEY: // right
-      if (this.vx < this.speed){
-        this.vx++
-      }
-      // this.x += this.v;
+      // if (this.vx < this.speed){
+      //   this.vx++
+      // }
+      this.x += this.v;
       break;
   }
-  this.y += this.vy;
-  this.x += this.vx;
+  // this.y += this.vy;
+  // this.x += this.vx;
 }
 
 Player.prototype.clearVelocity = function(event){
@@ -420,3 +431,33 @@ Player.prototype.clearVelocity = function(event){
       break;
   }
 };
+
+Player.prototype.createCutout = function (){
+  if (this.createMode){
+    this.newCutoutX.push(this.x);
+    this.newCutoutY.push(this.y);
+  } else if (!this.createMode){
+    this.newCutoutX.push(this.x);
+    this.newCutoutY.push(this.y);
+    this.pushCutout(this.newCutoutX, this.newCutoutY);
+    this.newCutoutX = [];
+    this.newCutoutY = [];
+  }
+}
+
+Player.prototype.pushCutout = function (coordX, coordY){
+  if (coordX[0] !== coordX[1] && coordX[0] !== coordY[1]){
+    function compare ( a, b ){ return a - b; };
+    coordX.sort(compare);
+    coordY.sort(compare);
+    this.stage.addCutout(coordX[0], coordY[0], coordX[1]-coordX[0], coordY[1]-coordY[0]);
+  }
+}
+
+Player.prototype.createLifeCord = function (){
+  if (this.createMode){
+    this.lifeCord.push(new LifeCord(this.game, this.stage, this.boss, this, this.x, this.y))
+  } else if (!this.createMode){
+    this.lifeCord = [];
+  };
+}

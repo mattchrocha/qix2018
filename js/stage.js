@@ -51,3 +51,8 @@ Stage.prototype.addCutout = function (x, y, w, h){
   this.cutouts.push(new Cutout(this.game, x, y, w, h))
 };
 
+Stage.prototype.reduceStage = function (arrayOfLines){
+  this.boundaries.forEach(function(element, index){
+    
+  });
+}

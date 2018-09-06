@@ -4,6 +4,7 @@ function Game(canvasID) {
   this.fps = 60;
 
   this.win = false;
+  this.lose = false;
 
   this.reset();
 }
@@ -32,6 +33,7 @@ Game.prototype.reset = function() {
   // this.cutouts = [ this.cutout1, this.cutout2 ];
   this.boss = new Boss(this, this.stage, 80, 80);
   this.player = new Player(this, this.stage, this.boss, 40, 40);
+  
 };
 
 Game.prototype.drawAll = function() {
@@ -44,6 +46,9 @@ Game.prototype.drawAll = function() {
   if (this.explosion){
     this.explosion.drawParticles();
   }
+  if (this.board){
+    this.board.draw();
+  }
 };
 
 Game.prototype.clearAll = function() {
@@ -55,22 +60,31 @@ Game.prototype.moveAll = function() {
   if (this.explosion){
     this.explosion.moveParticles();
   }
+  if (this.board){
+    this.board.move();
+  }
 };
 
 Game.prototype.detectAll = function(){
-  if (!this.win){
+  if (!this.win && !this.lose){
     this.collidesLifeCord();
     this.collidesPlayer();
     this.destroysBoss();
   }
 };
 
+Game.prototype.popBoard = function(message){
+    window.setTimeout(function(){
+      this.board = new Board(this, message);
+    }.bind(this),800);
+}
 
 Game.prototype.collidesLifeCord = function(){
   if (this.player.lifeCord){
     if (elementsIntersect(this.boss,this.player.lifeCord)){
      this.explodePlayer();
-     this.win = true;
+     this.lose = true;
+     this.popBoard("Your life supply has been destroyed!")
     };
   };
 };
@@ -79,7 +93,8 @@ Game.prototype.collidesPlayer = function(){
   if (this.player.createMode){
     if (elementsIntersect(this.boss,this.player)){
       this.explodePlayer();
-      this.win = true;
+      this.lose = true;
+      this.popBoard("The enemy destroyed your ship!")
     }
   }
 }
@@ -87,7 +102,8 @@ Game.prototype.collidesPlayer = function(){
 Game.prototype.destroysBoss = function(){
   if (this.calculateAreaLeft() <= 20){
     this.explodeBoss();
-    return this.win = true;
+    this.lose = true;
+    this.popBoard("You destroyed the enemy! Yeah")
   }
 }
 
@@ -105,7 +121,7 @@ Game.prototype.drawAreaLeft = function(){
   if (areaLeft == "100.00"){
     areaLeft = "100"
   }
-  this.context.font = "100px Kanit";
+  this.context.font = "800 100px Kanit";
   this.context.fillStyle = "#f788ef";
   this.context.textAlign = "center";
   this.context.globalCompositeOperation = "multiply";
@@ -116,8 +132,6 @@ Game.prototype.drawAreaLeft = function(){
 
 Game.prototype.explodePlayer = function (){
   this.player.lifeCord = null;
-  this.boss.vx = 0;
-  this.boss.vy = 0;
   this.explosion = new Explosion(this,this.stage,this.player,this.player.x,this.player.y,this.player.r,this.player.rgb);
   this.player.r = 0;
 }

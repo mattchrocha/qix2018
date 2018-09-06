@@ -45,14 +45,15 @@ Player.prototype.updateObjectBoundaries = function() {
 };
 
 Player.prototype.draw = function () {
-  this.game.context.beginPath();
-  this.game.context.fillStyle = "blue";
-  this.game.context.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-  this.game.context.fill();
-  this.game.context.closePath();
   if (this.lifeCord){
     this.lifeCord.draw()
   };
+  this.game.context.beginPath();
+  this.game.context.fillStyle = "#e8f441";
+  this.game.context.lineWidth = 0;
+  this.game.context.arc(this.x, this.y, this.r, 0, Math.PI * 2);
+  this.game.context.fill();
+  this.game.context.closePath();
   this.updateObjectBoundaries();
 };
 

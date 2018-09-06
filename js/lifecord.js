@@ -18,6 +18,8 @@ LifeCord.prototype.updateObjectBoundaries = function() {
 LifeCord.prototype.draw = function(){
   this.game.context.moveTo(this.x0, this.y0);
   this.game.context.lineTo(this.player.x, this.player.y);
+  this.game.context.strokeStyle = "#f4cd41";
+  this.game.context.lineWidth = 5;
   this.game.context.stroke();
   this.updateObjectBoundaries();
 }

@@ -33,9 +33,10 @@ Game.prototype.reset = function() {
 };
 
 Game.prototype.drawAll = function() {
-  this.context.fillStyle = "green";
+  this.context.fillStyle = "#4253f4";
   this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
   this.stage.draw();
+  this.drawAreaLeft();
   this.boss.draw();
   this.player.draw();
 };
@@ -52,6 +53,7 @@ Game.prototype.detectAll = function(){
   this.collidesLifeCord();
   this.collidesPlayer();
   this.destroysBoss();
+  
 };
 
 
@@ -98,3 +100,15 @@ Game.prototype.calculateAreaLeft = function(){
   return 100 - (acc/this.stage.originalArea*100)
 }
 
+Game.prototype.drawAreaLeft = function(){
+  var areaLeft = this.calculateAreaLeft().toFixed(2).toString();
+  if (areaLeft == "100.00"){
+    areaLeft = "100"
+  }
+  this.context.font = "100px Kanit";
+  this.context.fillStyle = "#f788ef";
+  this.context.textAlign = "center";
+  this.context.globalCompositeOperation = "multiply";
+  this.context.fillText(areaLeft+"%",this.canvas.width/2, this.canvas.height/2+30);
+  this.context.globalCompositeOperation = "source-over";
+}

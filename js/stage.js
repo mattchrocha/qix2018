@@ -48,7 +48,7 @@ function Stage(game) {
 // };
 
 Stage.prototype.draw = function () {
-  this.game.context.fillStyle = 'yellow';
+  this.game.context.fillStyle = '#5b9aff';
   this.game.context.fillRect(this.x, this.y, this.width, this.height);
   this.cutouts.forEach(function(element){
     element.draw();

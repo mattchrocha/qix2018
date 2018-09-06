@@ -110,10 +110,36 @@ function pushNewBoundaries(stageBoundaries, newBoundaries){
   console.log(newBeggining)
   console.log(newBoundaries)
   console.log(newEnd)
-  newBeggining[index.start][1][1] = newBoundaries[0][0];
-  newEnd[0][0] = newBoundaries[(newBoundaries.length - 1)][1][1];
-  // totalBoundaries = newBeggining.concat(newBoundaries,newEnd);
+  var newStartCoord = newBoundaries[0][0];
+  var newEndCoord = newBoundaries[(newBoundaries.length - 1)][1]
+  // console.log(newStartCoord)
+  
+  // newBeggining[index.start].splice(1,1,newStartCoord);
+  // console.log(newBeggining[index.start][1])
+
+
+  // newEnd[0].splice(0,1,newEndCoord);
+  // console.log(newEnd[0][0])
+
+
+  // loquesea(newBeggining[index.start][1], newStartCoord);
+  // console.log(newBoundaries[newBoundaries.length - 1][1])
+  //   console.log(newEnd[0][0])
+  var totalBoundaries = newBeggining.concat(newBoundaries,newEnd);
+  console.log(totalBoundaries)
+  console.log(totalBoundaries[newBeggining.length + newBoundaries.length][0])
+  console.log(totalBoundaries[newBeggining.length + newBoundaries.length - 1][1])
+  // totalBoundaries[index.start][1] = totalBoundaries[index.start + 1][0]
+  // totalBoundaries[newBeggining.length + newBoundaries.length][0] = totalBoundaries[newBeggining.length + newBoundaries.length - 1][1]
   // return stageBoundaries = totalBoundaries;
+}
+
+
+
+
+function loquesea(a, b){
+  console.log("hace la funcion")
+  a = b;
 }
 
 
@@ -237,3 +263,28 @@ var testArrayInverted = [[[960,300],[760,300]],[[760,300],[760,70]],[[760,70],[9
 var testArray = [[[960,70],[760,70]],[[760,70],[760,300]],[[760,300],[960,300]]]
 
 
+      function pushNewBoundaries(stageBoundaries, newBoundaries){
+        var index = {start: 1, end: 1}
+        var newEnd = stageBoundaries.slice(index.end)
+        var newBeggining = stageBoundaries.slice(0, index.start+1)
+        var newStartCoord = newBoundaries[0][0];
+        var newEndCoord = newBoundaries[(newBoundaries.length - 1)][1]
+        var totalBoundaries = newBeggining.concat(newBoundaries,newEnd);
+        // totalBoundaries[index.start][1] = totalBoundaries[index.start + 1][0]
+        // totalBoundaries[newBeggining.length + newBoundaries.length][0] = totalBoundaries[newBeggining.length + newBoundaries.length - 1][1];
+      }
+
+      var stage = [[[40,40],[960,40]],[[960,40],[960,580]],[[960,580],[40,580]],[[40,580],[40,40]]]
+
+      var testArray = [[[960,70],[760,70]],[[760,70],[760,300]],[[760,300],[960,300]]]
+
+
+
+
+[ [ [ 40, 40 ], [ 960, 40 ] ],  [ [ 960, 300 ], [ 960, 70 ] ],
+  [ [ 960, 70 ], [ 760, 70 ] ],
+  [ [ 760, 70 ], [ 760, 300 ] ],
+  [ [ 760, 300 ], [ 960, 300 ] ],
+  [ [ 960, 300 ], [ 960, 70 ] ],
+  [ [ 960, 580 ], [ 40, 580 ] ],
+  [ [ 40, 580 ], [ 40, 40 ] ] ]

@@ -31,7 +31,7 @@ function intersects(a,b,c,d,p,q,r,s) {
   } else {
     lambda = ((s - q) * (r - a) + (p - r) * (s - b)) / det;
     gamma = ((b - d) * (r - a) + (c - a) * (s - b)) / det;
-    return (0 < lambda && lambda < 1) && (0 < gamma && gamma < 1);
+    return (0 <= lambda && lambda <= 1) && (0 <= gamma && gamma <=  1);
   };
 };
 
@@ -102,22 +102,45 @@ function pointOfIntersection(a,b,c,d,p,q,r,s) {
 
 /* –––––––––––––––––––––––––––––––––––––––––––––––––––––– */
 
-function whichIsFirst(stageBoundaries, newBoundaries){
-  var firstLine = newBoundaries[0];
-  var lastLine = newBoundaries[-1];
-  var inverted = null;
-  var startIndex = getInvertedAndIndex(stageBoundaries, firstLine, lastLine)
+function pushNewBoundaries(stageBoundaries, newBoundaries){
+  var index = arrangeAndGetIndexes(stageBoundaries, newBoundaries);
+  var newEnd = stageBoundaries.slice(index.end)
+  var newBeggining = stageBoundaries.slice(0, index.start+1)
+  console.log(index)
+  console.log(newBeggining)
+  console.log(newBoundaries)
+  console.log(newEnd)
+  newBeggining[index.start][1][1] = newBoundaries[0][0];
+  newEnd[0][0] = newBoundaries[(newBoundaries.length - 1)][1][1];
+  // totalBoundaries = newBeggining.concat(newBoundaries,newEnd);
+  // return stageBoundaries = totalBoundaries;
+}
 
+
+var inverted;
+
+function arrangeAndGetIndexes(stageBoundaries, newBoundaries){
+  var firstLine = newBoundaries[0];
+  var lastLine = newBoundaries[newBoundaries.length - 1];
+  inverted = null;
+  var startIndex = getInvertedAndStartIndex(stageBoundaries, firstLine, lastLine)
+  if (inverted === true){
+    reverseCutout(newBoundaries);
+    firstLine = newBoundaries[0];
+    lastLine = newBoundaries[newBoundaries.length - 1];
+  };
+  var endIndex = getEndIndex(stageBoundaries, lastLine);
+  inverted = null;
+  return {start: startIndex, end: endIndex}
 };
 
-function getInvertedAndIndex(stageBoundaries,firstLine,lastLine){
+function getInvertedAndStartIndex(stageBoundaries,firstLine,lastLine){
   for (var i = 0; i < stageBoundaries.length && inverted === null; i++){
     if (
       linesIntersect(stageBoundaries[i],firstLine) === true &&
       linesIntersect(stageBoundaries[i],firstLine) === linesIntersect(stageBoundaries[i],lastLine)
     ){
-      
-
+      return inTheSameLineGetIndexAndInverted(stageBoundaries[i],i,firstLine,lastLine);
     } else if (linesIntersect(stageBoundaries[i],firstLine)){
       inverted = false;
       return i;
@@ -128,24 +151,54 @@ function getInvertedAndIndex(stageBoundaries,firstLine,lastLine){
   }
 }
 
-function inTheSameLine(baseline,firstLine,lastLine){
+function getEndIndex(stageBoundaries, lastLine){
+  var thisIndex;
+  for (var i = 0; i < stageBoundaries.length; i++){
+    if (linesIntersect(stageBoundaries[i],lastLine)){
+      thisIndex = i;
+    }
+  }
+  return thisIndex;
+}
+
+function inTheSameLineGetIndexAndInverted(baseline,i,firstLine,lastLine){
   var x1 = firstLine[0][0]
   var y1 = firstLine[0][1] 
   var x2 = lastLine[1][0]
   var y2 = lastLine[1][1]
-
-  switch(lineDirection(baseline){
+  switch(lineDirection(baseline)){
     case "E":
       if (y1 > y2){
-        
-      }
-
-
-
-
+        inverted = true;
+        return i;
+      } else if (y1 < y2) {
+        inverted = false;
+        return i;
+      };
     case "W":
+      if (y1 > y2){
+        inverted = false;
+        return i;
+      } else if (y1 < y2) {
+        inverted = true;
+        return i;
+      };
     case "N":
+      if (x1 > x2){
+        inverted = false;
+        return i;
+      } else if (x1 < x2) {
+        inverted = true;
+        return i;
+      };
     case "S":
+      if (x1 > x2){
+        inverted = true;
+        return i;
+      } else if (x1 < x2) {
+        inverted = false;
+        return i;
+      };
   }
 }
 
@@ -168,3 +221,19 @@ function lineDirection(line){
     }
   }
 }
+
+
+function reverseCutout(newBoundaries){
+  newBoundaries.forEach(function(element){
+    element.reverse()
+  });
+  return newBoundaries.reverse();
+}
+
+
+var testArrayInverted = [[[960,300],[760,300]],[[760,300],[760,70]],[[760,70],[960,70]]]
+
+
+var testArray = [[[960,70],[760,70]],[[760,70],[760,300]],[[760,300],[960,300]]]
+
+

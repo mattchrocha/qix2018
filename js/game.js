@@ -39,6 +39,9 @@ Game.prototype.drawAll = function() {
   this.drawAreaLeft();
   this.boss.draw();
   this.player.draw();
+  if (this.explosion){
+    this.explosion.drawParticles();
+  }
 };
 
 Game.prototype.clearAll = function() {
@@ -47,6 +50,9 @@ Game.prototype.clearAll = function() {
 
 Game.prototype.moveAll = function() {
   this.boss.move();
+  if (this.explosion){
+    this.explosion.moveParticles();
+  }
 };
 
 Game.prototype.detectAll = function(){
@@ -63,8 +69,12 @@ Game.prototype.collidesLifeCord = function(){
       // if (confirm("You crashed! New game?")){
       //   return this.reset();
       // };
+      this.player.lifeCord = null;
+      // this.player.r = 15;  
       this.boss.vx = 0;
       this.boss.vy = 0;
+      this.explosion = new Explosion(this,this.stage,this.stage,this.player.x,this.player.y,this.player.r);
+      this.player.r = 0;
     };
   };
 };

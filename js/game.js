@@ -3,6 +3,8 @@ function Game(canvasID) {
   this.context = this.canvas.getContext("2d");
   this.fps = 60;
 
+  this.win = false;
+
   this.reset();
 }
 
@@ -56,25 +58,19 @@ Game.prototype.moveAll = function() {
 };
 
 Game.prototype.detectAll = function(){
-  this.collidesLifeCord();
-  this.collidesPlayer();
-  this.destroysBoss();
-  
+  if (!this.win){
+    this.collidesLifeCord();
+    this.collidesPlayer();
+    this.destroysBoss();
+  }
 };
 
 
 Game.prototype.collidesLifeCord = function(){
   if (this.player.lifeCord){
     if (elementsIntersect(this.boss,this.player.lifeCord)){
-      // if (confirm("You crashed! New game?")){
-      //   return this.reset();
-      // };
-      this.player.lifeCord = null;
-      // this.player.r = 15;  
-      this.boss.vx = 0;
-      this.boss.vy = 0;
-      this.explosion = new Explosion(this,this.stage,this.stage,this.player.x,this.player.y,this.player.r);
-      this.player.r = 0;
+     this.explodePlayer();
+     this.win = true;
     };
   };
 };
@@ -82,22 +78,16 @@ Game.prototype.collidesLifeCord = function(){
 Game.prototype.collidesPlayer = function(){
   if (this.player.createMode){
     if (elementsIntersect(this.boss,this.player)){
-      // if (confirm("You have been destroyed! New game?")){
-      //   return this.reset();
-      // };
-      this.boss.vx = 0;
-      this.boss.vy = 0;
+      this.explodePlayer();
+      this.win = true;
     }
   }
 }
 
 Game.prototype.destroysBoss = function(){
   if (this.calculateAreaLeft() <= 20){
-    // if (confirm("You won! New game?")){
-    //   return this.reset();
-    // };
-    this.boss.vx = 0;
-    this.boss.vy = 0;
+    this.explodeBoss();
+    return this.win = true;
   }
 }
 
@@ -121,4 +111,22 @@ Game.prototype.drawAreaLeft = function(){
   this.context.globalCompositeOperation = "multiply";
   this.context.fillText(areaLeft+"%",this.canvas.width/2, this.canvas.height/2+30);
   this.context.globalCompositeOperation = "source-over";
+}
+
+
+Game.prototype.explodePlayer = function (){
+  this.player.lifeCord = null;
+  this.boss.vx = 0;
+  this.boss.vy = 0;
+  this.explosion = new Explosion(this,this.stage,this.player,this.player.x,this.player.y,this.player.r,this.player.rgb);
+  this.player.r = 0;
+}
+
+Game.prototype.explodeBoss = function (){
+  this.player.lifeCord = false;
+  this.boss.vx = 0;
+  this.boss.vy = 0;
+  this.explosion = new Explosion(this,this.stage,this.player,this.boss.x,this.boss.y,this.boss.width,this.boss.rgb);
+  this.boss.width = 0;
+  this.boss.height = 0;
 }

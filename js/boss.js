@@ -12,6 +12,8 @@ function Boss(game, stage, x, y) {
   this.width = 50;
   this.height = 50;
 
+  this.rgb = "244, 67, 232"
+
   this.updateObjectLimits();
   this.updateObjectBoundaries();
 }
@@ -36,7 +38,7 @@ Boss.prototype.updateObjectBoundaries = function() {
 };
 
 Boss.prototype.draw = function() {
-  this.game.context.fillStyle = "red";
+  this.game.context.fillStyle = "#f443e8";
   this.game.context.fillRect(this.x, this.y, this.width, this.height);
 };
 

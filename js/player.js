@@ -23,6 +23,8 @@ function Player(game, stage, boss, x, y){
 
   this.lifeCord = null;
 
+  this.rgb = "232, 244, 65";
+
   this.setListeners();
 }
 

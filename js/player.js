@@ -49,6 +49,7 @@ Player.prototype.updateObjectBoundaries = function() {
 
 Player.prototype.draw = function () {
   if (this.lifeCord){
+    this.stage.move()
     this.lifeCord.draw()
   };
   this.game.context.beginPath();
@@ -56,6 +57,8 @@ Player.prototype.draw = function () {
   this.game.context.lineWidth = 0;
   this.game.context.arc(this.x, this.y, this.r, 0, Math.PI * 2);
   this.game.context.fill();
+  this.game.context.strokeStyle = "rgba(255, 255, 255, 0)";
+  this.game.context.stroke();
   this.game.context.closePath();
   this.updateObjectBoundaries();
 };
@@ -471,13 +474,17 @@ Player.prototype.createCutout = function (){
 }
 
 Player.prototype.pushCutout = function (coordX, coordY){
-  if (coordX[0] !== coordX[1] && coordX[0] !== coordY[1]){
+  if (coordX[0] !== coordX[1] && coordY[0] !== coordY[1]){
     function compare ( a, b ){ return a - b; };
     coordX.sort(compare);
     coordY.sort(compare);
     this.stage.addCutout(coordX[0], coordY[0], coordX[1]-coordX[0], coordY[1]-coordY[0]);
     // console.log(this.stage.cutouts);
     // console.log("Area left: " + this.game.calculateAreaLeft())
+  } else {
+    console.log("works")
+    this.x = coordX[0]
+    this.y = coordY[0]
   }
 }
 
@@ -498,19 +505,22 @@ Player.prototype.newMovement = function (event) {
     } else {
       this.y -= this.v;
     };
-  } else if (RIGHT_KEY in keysDown) {
+  }
+  if (RIGHT_KEY in keysDown) {
     if (this.x + this.v > this.stage.right) {
       this.x = this.stage.right;
     } else {
       this.x += this.v;
     }
-  } else if (DOWN_KEY in keysDown) {
+  }
+  if (DOWN_KEY in keysDown) {
     if (this.y + this.v > this.stage.bottom) {
       this.y = this.stage.bottom;
     } else {
       this.y += this.v;
     };
-  } else if (LEFT_KEY in keysDown) {
+  }
+  if (LEFT_KEY in keysDown) {
     if (this.x - this.v < this.stage.left) {
       this.x = this.stage.left;
     } else {

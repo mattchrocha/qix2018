@@ -33,6 +33,11 @@ function Stage(game) {
   this.leftNew = [this.bl, this.tl];
   this.boundaries = [this.topNew,this.rightNew,this.bottomNew,this.leftNew];
   // this.updateObjectBoundaries();
+
+  
+
+  this.gradRadio = 100;
+  this.gradVel = 5;
 };
 
 // Stage.prototype.updateObjectBoundaries = function() {
@@ -48,7 +53,11 @@ function Stage(game) {
 // };
 
 Stage.prototype.draw = function () {
-  this.game.context.fillStyle = '#5b9aff';
+  this.gradient = this.game.context.createRadialGradient(this.game.canvas.width/2,this.game.canvas.height/2,this.gradRadio,this.game.canvas.width/2,this.game.canvas.height/2,400);
+  this.gradient.addColorStop(1,"rgb(91, 154, 255)");
+  this.gradient.addColorStop(0.2,"rgb(173, 205, 255)");
+  this.gradient.addColorStop(0,"rgb(184, 210, 252)");
+  this.game.context.fillStyle = /*'#5b9aff'*/ this.gradient;
   this.game.context.fillRect(this.x, this.y, this.width, this.height);
   this.cutouts.forEach(function(element){
     element.draw();
@@ -64,3 +73,16 @@ Stage.prototype.reduceStage = function (arrayOfLines){
 
   });
 }
+
+Stage.prototype.move = function(){
+  this.gradRadio += this.gradVel;
+  if (this.gradRadio > 200){
+    this.gradVel *= -1;
+  } else if (this.gradRadio < 100){
+    this.gradVel *= -1;
+  }
+  
+}
+
+
+

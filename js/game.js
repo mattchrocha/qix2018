@@ -108,6 +108,7 @@ Game.prototype.collidesLifeCord = function(){
   if (this.player.lifeCord){
     if (elementsIntersect(this.boss,this.player.lifeCord)){
      this.explodePlayer();
+     this.player.createMode = false;
      this.lose = true;
      this.popBoard("Your life supply has been destroyed!")
     };
@@ -118,6 +119,7 @@ Game.prototype.collidesPlayer = function(){
   if (this.player.createMode){
     if (elementsIntersect(this.boss,this.player)){
       this.explodePlayer();
+      this.player.createMode = false;
       this.lose = true;
       this.popBoard("The enemy destroyed your ship!")
     }

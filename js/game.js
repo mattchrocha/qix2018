@@ -5,17 +5,34 @@ function Game(canvasID) {
 
   this.win = false;
   this.lose = false;
-
-  this.reset();
+  
+  this.pressStart = true;
+  this.welcome = new Welcome(this);
+  this.instruction1();
+  // this.reset();
+  this.explosionIntro();
 }
 
-Game.prototype.start = function() {
+Game.prototype.update = function() {
   this.interval = setInterval(
     function() {
-      this.clearAll();
-      this.drawAll();
-      this.detectAll();
-      this.moveAll();
+      if (this.pressStart){
+        this.clearAll();
+        this.drawWelcome();
+        this.welcome.move();
+        if (this.welcome.instruction1){
+          this.welcome.drawInstruction1();
+          if (this.explosion){
+            this.explosion.drawParticles();
+            this.explosion.moveParticles();
+          }
+        }
+      } else {
+        this.clearAll();
+        this.drawAll();
+        this.detectAll();
+        this.moveAll();
+      }
     }.bind(this),
     1000 / this.fps
   );
@@ -33,7 +50,10 @@ Game.prototype.reset = function() {
   // this.cutouts = [ this.cutout1, this.cutout2 ];
   this.boss = new Boss(this, this.stage, 80, 80);
   this.player = new Player(this, this.stage, this.boss, 40, 40);
-  
+  this.board = false;
+  this.explosion = false;
+  this.win = false;
+  this.lose = false;
 };
 
 Game.prototype.drawAll = function() {
@@ -103,7 +123,7 @@ Game.prototype.destroysBoss = function(){
   if (this.calculateAreaLeft() <= 20){
     this.explodeBoss();
     this.lose = true;
-    this.popBoard("You destroyed the enemy! Yeah")
+    this.popBoard("You destroyed the enemy! Yeah!")
   }
 }
 
@@ -144,3 +164,34 @@ Game.prototype.explodeBoss = function (){
   this.boss.width = 0;
   this.boss.height = 0;
 }
+
+Game.prototype.drawWelcome = function (){
+  this.context.fillStyle = "#4253f4";
+  this.context.fillRect(0, 0, this.canvas.width, this.canvas.height);
+  this.welcome.draw();
+}
+
+
+Game.prototype.instruction1 = function(message){
+    window.setTimeout(function(){
+      this.welcome.instruction1 = true;
+    }.bind(this),2000);
+}
+
+Game.prototype.explosionIntro = function (){
+  window.setTimeout(function(){
+    this.explosion = new Explosion(this,this.stage,this.player,this.canvas.width/2,300,10,"232, 244, 65");
+    this.nextExplosion();
+    console.log("happens")
+  }.bind(this),3000);
+}
+
+Game.prototype.nextExplosion = function (){
+  
+  exploLoop = window.setTimeout(function(){
+    this.explosion = new Explosion(this,this.stage,this.player,this.canvas.width/2,300,10,"232, 244, 65");
+    this.nextExplosion();
+  }.bind(this),2000);
+}
+
+var exploLoop;

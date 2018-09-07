@@ -19,6 +19,7 @@ Board.prototype.draw = function () {
   this.game.context.fillStyle = 'rgba(216, 231, 255, 0.5)';
   this.game.context.strokeStyle = "#003b9b";
   this.game.context.lineWidth = 10;
+  this.game.context.setLineDash([]);
   this.game.context.fillRect(this.x, this.y, this.width, this.height);
   this.game.context.strokeRect(this.x, this.y, this.width, this.height);
 

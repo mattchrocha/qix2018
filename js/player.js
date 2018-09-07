@@ -25,6 +25,8 @@ function Player(game, stage, boss, x, y){
 
   this.rgb = "232, 244, 65";
 
+  this.offset = 1;
+  this.offsetSpeed = 1;
 
   this.setListeners();
 }
@@ -52,6 +54,18 @@ Player.prototype.draw = function () {
     this.stage.move()
     this.lifeCord.draw()
   };
+  if (!this.lifeCord && !this.game.lose){
+    this.game.context.beginPath();
+    this.game.context.lineWidth = 3;
+    this.game.context.strokeStyle = "#f4cd41";
+    this.game.context.lineCap="round";
+    this.game.context.arc(this.x, this.y, this.r+9, 0, Math.PI * 2);
+    this.game.context.setLineDash([1, 6]);
+    this.game.context.lineDashOffset = this.offset;
+    this.game.context.stroke();
+    this.game.context.closePath();
+    this.offset -= this.offsetSpeed;
+  }
   this.game.context.beginPath();
   this.game.context.fillStyle = "#e8f441";
   this.game.context.lineWidth = 0;
@@ -65,7 +79,7 @@ Player.prototype.draw = function () {
 
 Player.prototype.setListeners = function() {
   document.onkeydown = function(event) {
-    if (event.keyCode === SPACE_BAR){
+    if (event.keyCode === SPACE_BAR && !this.game.lose && !this.game.win){
       this.createMode = !this.createMode;
       this.createCutout();
       this.createLifeCord();

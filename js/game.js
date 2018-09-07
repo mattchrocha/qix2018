@@ -129,7 +129,7 @@ Game.prototype.collidesPlayer = function(){
 Game.prototype.destroysBoss = function(){
   if (this.calculateAreaLeft() <= 20){
     this.explodeBoss();
-    this.lose = true;
+    this.win = true;
     this.popBoard("You destroyed the enemy! Yeah!")
   }
 }

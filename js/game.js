@@ -31,7 +31,7 @@ Game.prototype.update = function() {
         this.clearAll();
         this.drawAll();
         this.detectAll();
-        this.moveAll();
+        this.moveAll(keysDown);
       }
     }.bind(this),
     1000 / this.fps
@@ -75,13 +75,18 @@ Game.prototype.clearAll = function() {
   this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
 };
 
-Game.prototype.moveAll = function() {
+Game.prototype.moveAll = function(events) {
   this.boss.move();
   if (this.explosion){
     this.explosion.moveParticles();
   }
   if (this.board){
     this.board.move();
+  }
+  if (!this.player.createMode){
+    this.player.moveInBoundaries(events);
+  } else if (this.player.createMode){
+    this.player.newMovement(events);
   }
 };
 
@@ -179,12 +184,14 @@ Game.prototype.instruction1 = function(message){
 }
 
 Game.prototype.explosionIntro = function (){
-  window.setTimeout(function(){
+  exploIntro = window.setTimeout(function(){
     this.explosion = new Explosion(this,this.stage,this.player,this.canvas.width/2,300,10,"232, 244, 65");
     this.nextExplosion();
     console.log("happens")
   }.bind(this),3000);
 }
+
+var exploIntro
 
 Game.prototype.nextExplosion = function (){
   

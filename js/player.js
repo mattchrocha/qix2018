@@ -9,11 +9,11 @@ function Player(game, stage, boss, x, y){
 
   this.r = 10;
 
-  this.v = 40;
+  this.v = 8;
 
   this.vx = 0;
   this.vy = 0;
-  this.speed = 20;
+  this.speed = 1;
 
   this.acc = 0;
 
@@ -25,9 +25,10 @@ function Player(game, stage, boss, x, y){
 
   this.rgb = "232, 244, 65";
 
+
   this.setListeners();
 }
-
+var keysDown = {}
 var UP_KEY = 38;
 var DOWN_KEY = 40;
 var LEFT_KEY = 37;
@@ -67,19 +68,27 @@ Player.prototype.setListeners = function() {
       this.createLifeCord();
       console.log("Create mode: "+ this.createMode)
     }
-    if (!this.createMode){
-      this.moveInBoundaries(event);
-    } else if (this.createMode){
-      this.move(event);
+    keysDown[event.keyCode] = true;
+    // if (!this.createMode){
+    //   keysDown[event.keyCode] = true;
+    //   this.moveInBoundaries(event);
+    // } else if (this.createMode){
+    //   keysDown[event.keyCode] = true;
+    //   this.move(event);
       // this.moveOutAndCreate(event);
-    }
+
   }.bind(this);
 
   document.onkeyup = function(event) {
+    delete keysDown[event.keyCode];
     this.clearVelocity(event);
   }.bind(this);
 };
 
+// if(!this.player.createMode){
+//   this.player.moveInBoundaries();
+// } else if (this.player.createMode){
+//   this.player.move(event);
 
 
 Player.prototype.moveInBoundaries = function(event){
@@ -148,7 +157,7 @@ Player.prototype.canMoveY = function () {
 
 
 Player.prototype.moveOnStageBoundaries = function (event) {
-  if (event.keyCode === UP_KEY) {
+  if (/*event.keyCode === UP_KEY*/UP_KEY in keysDown) {
     if (this.canMoveY()) {
       if (this.y - this.v < this.stage.top){
         this.y = this.stage.top;
@@ -156,7 +165,7 @@ Player.prototype.moveOnStageBoundaries = function (event) {
         this.y -= this.v;
       };
     };
-  } else if (event.keyCode === RIGHT_KEY) {
+  } else if (/*event.keyCode === */RIGHT_KEY in keysDown) {
     if (this.canMoveX()){
       if (this.x + this.v > this.stage.right){
         this.x = this.stage.right;
@@ -164,7 +173,7 @@ Player.prototype.moveOnStageBoundaries = function (event) {
         this.x += this.v;
       }
     }
-  } else if (event.keyCode === DOWN_KEY){
+  } else if (/*event.keyCode === */DOWN_KEY in keysDown){
     if (this.canMoveY()) {
       if (this.y + this.v > this.stage.bottom){
         this.y = this.stage.bottom;
@@ -172,7 +181,7 @@ Player.prototype.moveOnStageBoundaries = function (event) {
         this.y += this.v;
       };
     };
-  } else if (event.keyCode === LEFT_KEY) {
+  } else if (/*event.keyCode === */LEFT_KEY in keysDown) {
     if (this.canMoveX()){
       if (this.x - this.v < this.stage.left){
         this.x = this.stage.left;
@@ -184,7 +193,7 @@ Player.prototype.moveOnStageBoundaries = function (event) {
 };
 
 Player.prototype.moveOnCutoutBoundaries = function (event, cutout) {
-  if (event.keyCode === UP_KEY) {
+  if (UP_KEY in keysDown) {
     if (cutout.left == this.stage.left && this.x == cutout.left) {
       this.y = cutout.bottom;
     } else if (cutout.right == this.stage.right && this.x == cutout.right) {
@@ -198,7 +207,7 @@ Player.prototype.moveOnCutoutBoundaries = function (event, cutout) {
         };
       };
     }
-  } else if (event.keyCode === RIGHT_KEY) {
+  } else if (/*event.keyCode === */RIGHT_KEY in keysDown) {
     if (cutout.bottom == this.stage.bottom && this.y == cutout.bottom) {
       this.x = cutout.left;
     } else if (cutout.top == this.stage.top && this.y == cutout.top) {
@@ -212,7 +221,7 @@ Player.prototype.moveOnCutoutBoundaries = function (event, cutout) {
         };
       };
     }
-  } else if (event.keyCode === DOWN_KEY){
+  } else if (/*event.keyCode === */DOWN_KEY in keysDown){
     if (cutout.left == this.stage.left && this.x == cutout.left) {
       this.y = cutout.top;
     } else if (cutout.right == this.stage.right && this.x == cutout.right) {
@@ -227,7 +236,7 @@ Player.prototype.moveOnCutoutBoundaries = function (event, cutout) {
       };
     };
     
-  } else if (event.keyCode === LEFT_KEY) {
+  } else if (/*event.keyCode === */LEFT_KEY in keysDown) {
     if (cutout.bottom == this.stage.bottom && this.y == cutout.bottom) {
       this.x = cutout.right;
     } else if (cutout.top == this.stage.top && this.y == cutout.top) {
@@ -245,25 +254,25 @@ Player.prototype.moveOnCutoutBoundaries = function (event, cutout) {
 };
 
 Player.prototype.moveOnOverlapingCutouts = function (event, cutout1, cutout2){
-  if (event.keyCode === UP_KEY) {
+  if (UP_KEY in keysDown) {
     if (checkCutoutsLeftRightHigherBottom(this, cutout1, cutout2)){
       this.y = cutout2.bottom;
     } else if (checkCutoutsLeftRightLowerBottom(this, cutout1, cutout2)){
       this.y = cutout1.bottom;
     }
-  } else if (event.keyCode === RIGHT_KEY) {
+  } else if (/*event.keyCode ===*/ RIGHT_KEY in keysDown) {
     if (checkCutoutsTopBottomHigherLeft(this, cutout1, cutout2)){
       this.x = cutout1.left;
     } else if (checkCutoutsTopBottomLowerLeft(this, cutout1, cutout2)){
       this.x = cutout2.left;
     }
-  } else if (event.keyCode === DOWN_KEY) {
+  } else if (/*event.keyCode ===*/ DOWN_KEY in keysDown) {
     if (checkCutoutsLeftRightHigherTop(this, cutout1, cutout2)){
       this.y = cutout1.top;
     } else if (checkCutoutsLeftRightLowerTop(this, cutout1, cutout2)){
       this.y = cutout2.top;
     }
-  } else if (event.keyCode === LEFT_KEY) {
+  } else if (/*event.keyCode ===*/ LEFT_KEY in keysDown) {
     if (checkCutoutsTopBottomHigherRight(this, cutout1, cutout2)){
       this.x = cutout2.right;
     } else if (checkCutoutsTopBottomLowerRight(this, cutout1, cutout2)){
@@ -467,8 +476,8 @@ Player.prototype.pushCutout = function (coordX, coordY){
     coordX.sort(compare);
     coordY.sort(compare);
     this.stage.addCutout(coordX[0], coordY[0], coordX[1]-coordX[0], coordY[1]-coordY[0]);
-    console.log(this.stage.cutouts);
-    console.log("Area left: " + this.game.calculateAreaLeft())
+    // console.log(this.stage.cutouts);
+    // console.log("Area left: " + this.game.calculateAreaLeft())
   }
 }
 
@@ -479,3 +488,33 @@ Player.prototype.createLifeCord = function (){
     this.lifeCord = null;
   };
 }
+
+
+
+Player.prototype.newMovement = function (event) {
+  if (UP_KEY in keysDown) {
+    if (this.y - this.v < this.stage.top) {
+      this.y = this.stage.top;
+    } else {
+      this.y -= this.v;
+    };
+  } else if (RIGHT_KEY in keysDown) {
+    if (this.x + this.v > this.stage.right) {
+      this.x = this.stage.right;
+    } else {
+      this.x += this.v;
+    }
+  } else if (DOWN_KEY in keysDown) {
+    if (this.y + this.v > this.stage.bottom) {
+      this.y = this.stage.bottom;
+    } else {
+      this.y += this.v;
+    };
+  } else if (LEFT_KEY in keysDown) {
+    if (this.x - this.v < this.stage.left) {
+      this.x = this.stage.left;
+    } else {
+      this.x -= this.v;
+    }
+  };
+};

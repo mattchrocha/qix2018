@@ -56,7 +56,8 @@ Welcome.prototype.setListeners = function() {
     if (event.keyCode === SPACE_BAR){
       this.game.pressStart = false;
       clearTimeout(exploLoop);
-      this.game.reset()
+      clearTimeout(exploIntro);
+      this.game.reset();
     }
   }.bind(this);
 };

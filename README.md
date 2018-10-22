@@ -6,6 +6,8 @@ An adaptation of the 80's arcade games [QIX](https://www.youtube.com/watch?v=Wvz
 
 Fully developed in **Javascript ES6 canvas**, the player's spaceship has to reduce the stage's area to destroy the enemy.
 
+This project was developed in *Ironhack's Web Development Bootcamp* first module and was featured as one of the top 3 best projects.
+
 ## Features 
 
 The player has two moving states:

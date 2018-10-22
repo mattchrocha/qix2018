@@ -1,7 +1,5 @@
 # QIX
-#### Javascript 2018 version 
-
-[Try it here](https://mattchrocha.github.io/qix2018/)
+#### [Try it here](https://mattchrocha.github.io/qix2018/)
 
 ## About
 An adaptation of the 80's arcade games [QIX](https://www.youtube.com/watch?v=Wvzyd0OZg1I) and [Volfield](https://www.youtube.com/watch?v=RxuMVqkLD7o).
